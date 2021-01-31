@@ -1,12 +1,6 @@
 <?php 
 
-	// connect to the database
-	$conn = mysqli_connect('localhost', 'jed', 'test1234', 'pizza_fanatic');
-
-	// check connection
-	if(!$conn){
-		echo 'Connection error: '. mysqli_connect_error();
-	}
+	include('config/db_connect.php');
 
 	// write query for all pizzas
 	$sql = 'SELECT title, ingredients, id FROM pizzas ORDER BY created_at';
@@ -23,7 +17,7 @@
 	// close connection
 	mysqli_close($conn);
 
-	print_r($pizzas);
+	//print_r(explode(',', $pizzas[0]['ingredients']));
 
 
 ?>
@@ -41,27 +35,28 @@
         <?php foreach($pizzas as $pizza): ?>
 
         <div class="col s6 md3">
-
             <div class="card z-depth-0">
-
                 <div class="card-content center">
-
                     <h6><?php echo htmlspecialchars($pizza['title']); ?></h6>
-
-                    <div><?php echo htmlspecialchars($pizza['ingredients']); ?></div>
-
+                    <ul class="grey-text">
+                        <?php foreach(explode(',', $pizza['ingredients']) as $ing): ?>
+                        <li><?php echo htmlspecialchars($ing); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
-
                 <div class="card-action right-align">
-                    <div class="brand-text" href="#">more info</div>
+                    <a class="brand-text" href="details.php?id=<?php echo $pizza['id'] ?>">more info</a>
                 </div>
-
             </div>
-
         </div>
 
         <?php endforeach; ?>
 
+        <?php if (count($pizzas) >= 2): ?>
+        <p>there are 2 or more pizzas</p>
+        <?php else: ?>
+        <p>there are less than 4 pizzas</p>
+        <?php endif; ?>
 
     </div>
 </div>
